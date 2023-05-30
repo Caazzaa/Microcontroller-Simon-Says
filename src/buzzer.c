@@ -39,7 +39,6 @@ void toneIncrement()
             if (tone[i] > 55000){
                 tone[i] = 55000;
             }
-            printf("%lu\n", tone[i]);
         }
     }
 }
@@ -52,7 +51,6 @@ void toneDecrement()
         for (i = 0; i < 4; i++)
         {
             tone[i] >>= 1;
-            printf("%lu\n", tone[i]);
         }
     }
 }
@@ -63,6 +61,5 @@ void toneReset()
     for (i = 0; i < 4; i++)
     {
         tone[i] = toneOG[i];
-        printf("%lu\n", tone[i]);
     }
 }

@@ -32,7 +32,8 @@ typedef enum
     button3,
     button4,
     Success,
-    Fail
+    Fail,
+    Restart
 } gameState;
 
 extern volatile uint16_t elapsed_time;

@@ -14,16 +14,19 @@ volatile uint8_t pb_released = 0;
 volatile uint8_t segs[] = {SEGS_OFF, SEGS_OFF};
 uint16_t duration;
 
-int seqGenerator(uint32_t *state_lfsr) {
+int seqGenerator(uint32_t *state_lfsr)
+{
     uint8_t bit = *state_lfsr & 1;
     *state_lfsr >>= 1;
-    if(bit == 1){
+    if (bit == 1)
+    {
         *state_lfsr ^= 0xE2023CAB;
     }
     return *state_lfsr & 0b11;
 }
 
-int seqRun(uint16_t len){
+int seqRun(uint16_t len)
+{
     uint32_t state_lfsr = student_number;
     uint8_t step = seqGenerator(&state_lfsr);
 
@@ -31,7 +34,8 @@ int seqRun(uint16_t len){
     uint8_t pb_sample_r = 0xFF;
     uint8_t pb_changed, pb_rising, pb_falling;
 
-    while(1){
+    while (1)
+    {
         pb_sample_r = pb_sample;
         pb_sample = pb_debounced;
         pb_changed = pb_sample ^ pb_sample_r;
@@ -42,7 +46,8 @@ int seqRun(uint16_t len){
         allow_updating_playback_delay = 1;
         new_playback_time = durationPOT();
 
-        switch (pb_state){
+        switch (pb_state)
+        {
         case Pause:
             pb_released = 0;
             break;
@@ -65,16 +70,17 @@ int seqRun(uint16_t len){
 
             break;
         case button1:
-        seqTone(0);
-        segs[0] = SEGS_EF;
-         if (!pb_released)
+            seqTone(0);
+            segs[0] = SEGS_EF;
+            if (!pb_released)
             {
-                if (pb_rising & PIN4_bm){
+                if (pb_rising & PIN4_bm)
+                {
                     pb_released = 1;
                 }
             }
             else
-            { 
+            {
                 if (elapsed_time >= playback_time)
                 {
                     seqToneStop();
@@ -84,8 +90,8 @@ int seqRun(uint16_t len){
             }
             break;
         case button2:
-        seqTone(1);
-        segs[0] = SEGS_BC;
+            seqTone(1);
+            segs[0] = SEGS_BC;
             if (!pb_released)
             {
                 if (pb_rising & PIN5_bm)
@@ -176,6 +182,13 @@ int seqRun(uint16_t len){
             student_number = state_lfsr;
             pb_state = Pause;
             return 0;
+        case Restart:
+
+            segs[0] = SEGS_OFF;
+            segs[1] = SEGS_OFF;
+
+            pb_state = Wait;
+            return 0;
         default:
             pb_state = Wait;
             break;
@@ -183,11 +196,13 @@ int seqRun(uint16_t len){
     }
 
     return 1;
-    }
+}
 
-int seqStart(uint16_t len){
+int seqStart(uint16_t len)
+{
     uint32_t state_lfsr = student_number;
-    for(i = 0; i < len; i++){
+    for (i = 0; i < len; i++)
+    {
         uint8_t step = seqGenerator(&state_lfsr);
         switch (step)
         {

@@ -15,7 +15,8 @@ typedef enum
     seqBegin,
     seqCheck,
     seqSuccess,
-    seqFail
+    seqFail,
+    seqRestart
 } seqState;
 
 int main(void)
@@ -54,7 +55,7 @@ int main(void)
             }
             break;
         case seqSuccess:
-            printf("Good Job!\n");
+            // printf("Good Job!\n");
             // printf("Your Score Is: %d\n", len);
             len++;
             pb_state = Wait;
@@ -62,11 +63,12 @@ int main(void)
             break;
         case seqFail:
             len--;
-            printf("Failed\n");
             printf("Your Score Was: %d\n", len);
             if(scoreboard(len)){
                 printScoreboard();
             }
+            printf("Restarting Game...\n");
+            delay(500);
             len = 1;
             pb_state = Wait;
             state = seqBegin;

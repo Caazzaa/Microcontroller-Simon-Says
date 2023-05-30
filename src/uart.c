@@ -106,13 +106,18 @@ ISR(USART0_RXC_vect)
             }
             break;
         case ',':
+        case 'k':
             toneIncrement();
             break;
         case '.':
+        case 'l':
             toneDecrement();
             break;
         case '0':
+        case 'p':
+            seqToneStop(); 
             toneReset();
+            pb_state = Restart;       
             break;
         }
         // case 'd':
