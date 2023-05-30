@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../assignDemo/studio12 (2)"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"sequence.h": "c",
+			"stdio.h": "c",
+			"uart.h": "c",
+			"stdint.h": "c",
+			"timer.h": "c",
+			"potentiometer.h": "c"
+		}
+	}
+}
