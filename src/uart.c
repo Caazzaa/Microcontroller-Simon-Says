@@ -9,6 +9,7 @@
 // extern volatile State state;
 extern volatile uint8_t pb_released;
 extern volatile gameState pb_state;
+extern volatile uint32_t student_number;
 static FILE mystdout = FDEV_SETUP_STREAM(uart_putc_printf, NULL, _FDEV_SETUP_WRITE);
 
 int uart_putc_printf(char c, FILE *stream)
@@ -119,17 +120,17 @@ ISR(USART0_RXC_vect)
             toneReset();
             pb_state = Restart;       
             break;
+        case '9':
+        case 'o':
+            payload_valid = 1;
+            chars_received = 0;
+            payload = 0;
+            SERIAL_STATE = AWAITING_COMMAND;
+            break;
+        default:
+            break;
         }
-        // case 'd':
-        //     payload_valid = 1;
-        //     chars_received = 0;
-        //     payload = 0;
-        //     SERIAL_STATE = AWAITING_PAYLOAD;
-        //     break;
-        // default:
-        //     break;
-        // }
-        // break;
+        break;
     case AWAITING_PAYLOAD:
     {
         uint8_t parsed_result = hexchar_to_int((char)rx_data);
@@ -138,9 +139,9 @@ ISR(USART0_RXC_vect)
         else
             payload_valid = 0;
 
-        if (++chars_received == 4)
+        if (++chars_received == 8)
         {
-            new_playback_time = (payload_valid) ? payload : new_playback_time;
+            new_playback_time = (payload_valid) ? payload : student_number;
             SERIAL_STATE = AWAITING_COMMAND;
         }
         break;

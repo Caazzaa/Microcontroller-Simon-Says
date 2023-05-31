@@ -6,8 +6,8 @@
 #define SEGS_ON 0b00000000
 #define SEGS_OFF 0b01111111
 
-uint32_t student_number = 0x11243635;
 int i;
+uint32_t student_number = 0x11243635;
 extern volatile uint8_t pb_debounced;
 volatile gameState pb_state = Wait;
 volatile uint8_t pb_released = 0;
@@ -209,34 +209,34 @@ int seqStart(uint16_t len)
         case 0:
             seqTone(0);
             segs[0] = SEGS_EF;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             seqToneStop();
             segs[0] = SEGS_OFF;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             break;
         case 1:
             seqTone(1);
             segs[0] = SEGS_BC;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             seqToneStop();
             segs[0] = SEGS_OFF;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             break;
         case 2:
             seqTone(2);
             segs[1] = SEGS_EF;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             seqToneStop();
             segs[0] = SEGS_OFF;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             break;
         case 3:
             seqTone(3);
             segs[1] = SEGS_BC;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             seqToneStop();
             segs[0] = SEGS_OFF;
-            delay(durationPOT() / 2);
+            delay(durationPOT() >> 1);
             break;
         default:
             break;
