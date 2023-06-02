@@ -10,6 +10,9 @@
 extern volatile uint8_t pb_released;
 extern volatile gameState pb_state;
 extern volatile uint32_t student_number;
+extern volatile uint32_t new_number;
+volatile Serial_State SERIAL_STATE = AWAITING_COMMAND;
+volatile uint8_t chars_received = 0;
 static FILE mystdout = FDEV_SETUP_STREAM(uart_putc_printf, NULL, _FDEV_SETUP_WRITE);
 
 int uart_putc_printf(char c, FILE *stream)
@@ -52,6 +55,7 @@ void uart_puts(char *string)
 
 uint8_t hexchar_to_int(char c)
 {
+    printf("%d", (c-48));
     if ('0' <= c && c <= '9')
         return c - '0';
     else if ('a' <= c && c <= 'f')
@@ -62,9 +66,7 @@ uint8_t hexchar_to_int(char c)
 
 ISR(USART0_RXC_vect)
 {
-    static Serial_State SERIAL_STATE = AWAITING_COMMAND;
 
-    static uint8_t chars_received = 0;
     static uint16_t payload = 0;
     static uint8_t payload_valid = 1;
 
@@ -118,14 +120,18 @@ ISR(USART0_RXC_vect)
         case 'p':
             seqToneStop(); 
             toneReset();
+            if(new_number){
+                student_number = new_number;
+            }
             pb_state = Restart;       
             break;
         case '9':
         case 'o':
+            printf("Enter 8 digits: ");
             payload_valid = 1;
             chars_received = 0;
             payload = 0;
-            SERIAL_STATE = AWAITING_COMMAND;
+            SERIAL_STATE = AWAITING_PAYLOAD;
             break;
         default:
             break;
@@ -141,7 +147,24 @@ ISR(USART0_RXC_vect)
 
         if (++chars_received == 8)
         {
-            new_playback_time = (payload_valid) ? payload : student_number;
+            new_number = payload;
+            // new_number = (payload_valid) ? payload : student_number;
+            SERIAL_STATE = AWAITING_COMMAND;
+        }
+        break;
+    }
+    case AWAITING_NAME:
+    {
+        uint8_t parsed_result = hexchar_to_int((char)rx_data);
+        if (parsed_result != 16)
+            payload = (payload << 4) | parsed_result;
+        else
+            payload_valid = 0;
+
+        if (++chars_received == 8)
+        {
+            new_number = payload;
+            // new_number = (payload_valid) ? payload : student_number;
             SERIAL_STATE = AWAITING_COMMAND;
         }
         break;

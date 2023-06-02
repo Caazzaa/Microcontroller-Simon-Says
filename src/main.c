@@ -1,6 +1,8 @@
 #include "headers.h"
 
 extern volatile gameState pb_state;
+extern volatile Serial_State SERIAL_STATE;
+extern volatile uint32_t new_number;
 
 struct userScore {
     char name[50];
@@ -15,8 +17,7 @@ typedef enum
     seqBegin,
     seqCheck,
     seqSuccess,
-    seqFail,
-    seqRestart
+    seqFail
 } seqState;
 
 int main(void)
@@ -65,9 +66,12 @@ int main(void)
             len--;
             printf("Your Score Was: %d\n", len);
             if(scoreboard(len)){
+                printf("Enter Name: ");
+                SERIAL_STATE = AWAITING_NAME;
                 printScoreboard();
             }
-            printf("Restarting Game...\n");
+            printf("Restarting Game...\n===================\n");
+            printf("%lu", new_number);
             delay(500);
             len = 1;
             pb_state = Wait;

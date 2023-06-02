@@ -13,7 +13,8 @@
 typedef enum
 {
     AWAITING_COMMAND,
-    AWAITING_PAYLOAD
+    AWAITING_PAYLOAD,
+    AWAITING_NAME
 } Serial_State;
 
 typedef enum

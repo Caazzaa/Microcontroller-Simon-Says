@@ -7,12 +7,24 @@
 #define SEGS_OFF 0b01111111
 
 int i;
-uint32_t student_number = 0x11243635;
+uint16_t duration;
+
+volatile uint32_t new_number;
+volatile uint32_t student_number = 0x11243635;
 extern volatile uint8_t pb_debounced;
 volatile gameState pb_state = Wait;
 volatile uint8_t pb_released = 0;
 volatile uint8_t segs[] = {SEGS_OFF, SEGS_OFF};
-uint16_t duration;
+volatile uint8_t scoreSEGS[] = {
+    0x08, 0x6B, 0x44, 0x41, 0x23, 0x11, 0x10, 0x4B, 0x00, 0x01};
+
+void display_score(uint16_t len)
+{
+    segs[0] = SEGS_OFF;
+    if (len > 9)
+        segs[0] = scoreSEGS[len % 100 / 10];
+    segs[1] = scoreSEGS[len % 10];
+}
 
 int seqGenerator(uint32_t *state_lfsr)
 {
@@ -27,6 +39,7 @@ int seqGenerator(uint32_t *state_lfsr)
 
 int seqRun(uint16_t len)
 {
+    uint16_t count = 0;
     uint32_t state_lfsr = student_number;
     uint8_t step = seqGenerator(&state_lfsr);
 
@@ -144,13 +157,15 @@ int seqRun(uint16_t len)
             }
             break;
         case Success:
+            allow_updating_playback_delay = 1;
             delay(500);
             seqToneStop();
-
-            len--;
-            if (len == 0)
+            count++;
+            if (len == count)
             {
+                display_score(len);
                 // Success pattern
+                delay(500);
                 segs[0] = SEGS_ON;
                 segs[1] = SEGS_ON;
 
@@ -168,8 +183,9 @@ int seqRun(uint16_t len)
             }
             break;
         case Fail:
-
+            display_score(len - 1);
             delay(500);
+
             // Fail pattern
             seqToneStop();
             segs[0] = SEGS_G;
@@ -179,6 +195,11 @@ int seqRun(uint16_t len)
             segs[0] = SEGS_OFF;
             segs[1] = SEGS_OFF;
 
+            count++;
+            for(; count < len; count++){
+                seqGenerator(&state_lfsr);
+            }
+            
             student_number = state_lfsr;
             pb_state = Pause;
             return 0;
