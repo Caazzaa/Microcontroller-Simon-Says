@@ -26,6 +26,7 @@ void timer_init(void)
     TCB1.CCMP = 3333;     
     TCB1.INTCTRL = TCB_CAPT_bm;      // CAPT interrupt enable
     TCB1.CTRLA = TCB_ENABLE_bm;      // Enable
+    durationPOT();
 
     sei();
 }
