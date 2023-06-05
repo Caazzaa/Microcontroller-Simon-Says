@@ -51,7 +51,6 @@ int main(void)
             state = seqBegin;
             break;
         case seqFail:
-            len--;
             for (uint8_t i = 0; i < 5; i++)
             {
                 if (len > board[i].score)
@@ -61,6 +60,13 @@ int main(void)
                     state = seqName;
                     break;
                 }
+                // if (len <= board[i].score)
+                // {
+                //     printScoreboard();
+                //     printf("Restarting Game...\n===================\n");
+                //     state = seqBegin;
+                //     break;
+                // }
             }
             if (state != seqName)
             {

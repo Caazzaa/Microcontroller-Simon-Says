@@ -65,6 +65,7 @@ int seqRun(uint16_t len)
         case Pause:
             uart_control = 0;
             pb_released = 0;
+            // pb_state = Wait;
             break;
         case Wait:
             allow_updating_playback_delay = 0;
