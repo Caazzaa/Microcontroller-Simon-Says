@@ -3,22 +3,12 @@
 extern volatile gameState pb_state;
 extern volatile Serial_State SERIAL_STATE;
 extern volatile uint32_t new_number;
-
-struct userScore {
-    char name[50];
-    uint32_t score;
-} board[5];
+volatile seqState state = seqBegin;
+extern volatile uint8_t chars_received;
+volatile char name[20];
 
 // uint32_t score[] = {
 //     NULL, NULL, NULL, NULL, NULL};
-
-typedef enum
-{
-    seqBegin,
-    seqCheck,
-    seqSuccess,
-    seqFail
-} seqState;
 
 int main(void)
 {
@@ -35,13 +25,13 @@ int main(void)
     PORTB.OUTSET |= PIN5_bm;
     PORTB.OUTCLR |= PIN5_bm;
     PORTB.DIRSET |= PIN5_bm;
-    seqState state = seqBegin;
 
     while (1)
     {
         switch (state)
         {
         case seqBegin:
+            pb_state = Wait;
             seqStart(len);
             state = seqCheck;
             break;
@@ -56,32 +46,52 @@ int main(void)
             }
             break;
         case seqSuccess:
-            // printf("Good Job!\n");
-            // printf("Your Score Is: %d\n", len);
             len++;
             pb_state = Wait;
             state = seqBegin;
             break;
         case seqFail:
             len--;
-            printf("Your Score Was: %d\n", len);
-            if(scoreboard(len)){
-                printf("Enter Name: ");
-                SERIAL_STATE = AWAITING_NAME;
-                printScoreboard();
+            for (uint8_t i = 0; i < 5; i++)
+            {
+                if (len > board[i].score)
+                {
+                    printf("Enter name: ");
+                    SERIAL_STATE = AWAITING_NAME;
+                    state = seqName;
+                    break;
+                }
             }
+            if (state != seqName)
+            {
+                printScoreboard();
+                printf("Restarting Game...\n===================\n");
+                state = seqBegin;
+            }
+            break;
+        case seqName:
+            if (elapsed_time > 5000)
+            {
+                SERIAL_STATE = AWAITING_COMMAND;
+                state = seqSetName;
+            }
+            break;
+        case seqSetName:
+            name[chars_received] = '\0';
+            scoreboard(len);
+            printScoreboard();
             printf("Restarting Game...\n===================\n");
-            printf("%lu", new_number);
-            delay(500);
+            chars_received = 0;
             len = 1;
-            pb_state = Wait;
             state = seqBegin;
+            break;
+        default:
             break;
         }
     }
 }
 
-int scoreboard(uint16_t len)
+void scoreboard(uint16_t len)
 {
     for (int i = 0; i < 5; i++)
     {
@@ -89,19 +99,26 @@ int scoreboard(uint16_t len)
         {
             for (int j = 4; j > i; j--)
             {
-                board[j].score = board[j-1].score;
+                board[j].score = board[j - 1].score;
+            }
+            for (uint8_t j = 0; j < 20; j++)
+            {
+                board[i].name[j] = name[j];
             }
             board[i].score = len;
-            return 1;
             break;
         }
     }
-    return 0;
 }
 
-int printScoreboard(){
+void printScoreboard()
+{
     for (int i = 0; i < 5; i++)
     {
-        printf("%lu\n", board[i].score);
+        if (board[i].score == 0)
+        {
+            break;
+        }
+        printf("%s %d\n", board[i].name, board[i].score);
     }
 }

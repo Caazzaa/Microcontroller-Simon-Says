@@ -9,8 +9,10 @@
 // extern volatile State state;
 extern volatile uint8_t pb_released;
 extern volatile gameState pb_state;
+extern volatile seqState state;
 extern volatile uint32_t student_number;
 extern volatile uint32_t new_number;
+extern volatile char name[20];
 volatile Serial_State SERIAL_STATE = AWAITING_COMMAND;
 volatile uint8_t chars_received = 0;
 static FILE mystdout = FDEV_SETUP_STREAM(uart_putc_printf, NULL, _FDEV_SETUP_WRITE);
@@ -55,7 +57,6 @@ void uart_puts(char *string)
 
 uint8_t hexchar_to_int(char c)
 {
-    printf("%d", (c-48));
     if ('0' <= c && c <= '9')
         return c - '0';
     else if ('a' <= c && c <= 'f')
@@ -127,7 +128,6 @@ ISR(USART0_RXC_vect)
             break;
         case '9':
         case 'o':
-            printf("Enter 8 digits: ");
             payload_valid = 1;
             chars_received = 0;
             payload = 0;
@@ -154,21 +154,18 @@ ISR(USART0_RXC_vect)
         break;
     }
     case AWAITING_NAME:
-    {
-        uint8_t parsed_result = hexchar_to_int((char)rx_data);
-        if (parsed_result != 16)
-            payload = (payload << 4) | parsed_result;
-        else
-            payload_valid = 0;
-
-        if (++chars_received == 8)
+        if (rx_data == '\n' || rx_data == '\r')
         {
-            new_number = payload;
-            // new_number = (payload_valid) ? payload : student_number;
+            state = seqSetName;
             SERIAL_STATE = AWAITING_COMMAND;
         }
+        else
+        {
+            name[chars_received] = rx_data;
+            chars_received++;
+            elapsed_time = 0;
+        }
         break;
-    }
     default:
         break;
     }

@@ -12,6 +12,16 @@
 
 typedef enum
 {
+    seqBegin,
+    seqCheck,
+    seqSuccess,
+    seqFail,
+    seqName,
+    seqSetName
+} seqState;
+
+typedef enum
+{
     AWAITING_COMMAND,
     AWAITING_PAYLOAD,
     AWAITING_NAME
@@ -36,6 +46,11 @@ typedef enum
     Fail,
     Restart
 } gameState;
+
+struct userScore {
+    char name[20];
+    uint32_t score;
+} board[5];
 
 extern volatile uint16_t elapsed_time;
 extern volatile uint16_t playback_time ;

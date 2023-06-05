@@ -215,7 +215,6 @@ int seqRun(uint16_t len)
             break;
         }
     }
-
     return 1;
 }
 
