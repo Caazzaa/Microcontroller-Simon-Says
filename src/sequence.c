@@ -162,14 +162,14 @@ int seqRun(uint16_t len)
             count++;
             if (len == count)
             {
-                // Success pattern
-
+                // display success pattern
                 segs[0] = SEGS_ON;
                 segs[1] = SEGS_ON;
                 delay(durationPOT());
-                display_score(len);
+                display_score(len); //display current score
 
                 delay(durationPOT() >> 1);
+                // turn off success pattern
                 segs[0] = SEGS_OFF;
                 segs[1] = SEGS_OFF;
                 delay(durationPOT() >> 1);
@@ -185,14 +185,15 @@ int seqRun(uint16_t len)
             break;
         case Fail:
 
-            // Fail pattern
+            // display fail pattern
             seqToneStop();
             segs[0] = SEGS_G;
             segs[1] = SEGS_G;
             delay(durationPOT());
-            display_score(len - 1);
+            display_score(len - 1); //display score when fail
 
             delay(durationPOT() >> 1);
+            // turn fail pattern off
             segs[0] = SEGS_OFF;
             segs[1] = SEGS_OFF;
             delay(durationPOT() >> 1);
@@ -232,18 +233,10 @@ int seqStart(uint16_t len)
         case 0:
             seqTone(0);
             segs[0] = SEGS_EF;
-            // delay(durationPOT() >> 1);
-            // seqToneStop();
-            // segs[0] = SEGS_OFF;
-            // delay(durationPOT() >> 1);
             break;
         case 1:
             seqTone(1);
             segs[0] = SEGS_BC;
-            // delay(durationPOT() >> 1);
-            // seqToneStop();
-            // segs[0] = SEGS_OFF;
-            // delay(durationPOT() >> 1);
             break;
         case 2:
             seqTone(2);
