@@ -158,20 +158,21 @@ int seqRun(uint16_t len)
             break;
         case Success:
             allow_updating_playback_delay = 1;
-            delay(500);
             seqToneStop();
             count++;
             if (len == count)
             {
                 display_score(len);
                 // Success pattern
-                delay(500);
+
                 segs[0] = SEGS_ON;
                 segs[1] = SEGS_ON;
+                delay(durationPOT());
 
-                delay(500);
+                delay(durationPOT() >> 1);
                 segs[0] = SEGS_OFF;
                 segs[1] = SEGS_OFF;
+                delay(durationPOT() >> 1);
 
                 pb_state = Pause;
                 return 1;
@@ -184,22 +185,24 @@ int seqRun(uint16_t len)
             break;
         case Fail:
             display_score(len - 1);
-            delay(500);
 
             // Fail pattern
             seqToneStop();
             segs[0] = SEGS_G;
             segs[1] = SEGS_G;
+            delay(durationPOT());
 
-            delay(500);
+            delay(durationPOT() >> 1);
             segs[0] = SEGS_OFF;
             segs[1] = SEGS_OFF;
+            delay(durationPOT() >> 1);
 
             count++;
-            for(; count < len; count++){
+            for (; count < len; count++)
+            {
                 seqGenerator(&state_lfsr);
             }
-            
+
             student_number = state_lfsr;
             pb_state = Pause;
             return 0;
@@ -229,40 +232,35 @@ int seqStart(uint16_t len)
         case 0:
             seqTone(0);
             segs[0] = SEGS_EF;
-            delay(durationPOT() >> 1);
-            seqToneStop();
-            segs[0] = SEGS_OFF;
-            delay(durationPOT() >> 1);
+            // delay(durationPOT() >> 1);
+            // seqToneStop();
+            // segs[0] = SEGS_OFF;
+            // delay(durationPOT() >> 1);
             break;
         case 1:
             seqTone(1);
             segs[0] = SEGS_BC;
-            delay(durationPOT() >> 1);
-            seqToneStop();
-            segs[0] = SEGS_OFF;
-            delay(durationPOT() >> 1);
+            // delay(durationPOT() >> 1);
+            // seqToneStop();
+            // segs[0] = SEGS_OFF;
+            // delay(durationPOT() >> 1);
             break;
         case 2:
             seqTone(2);
             segs[1] = SEGS_EF;
-            delay(durationPOT() >> 1);
-            seqToneStop();
-            segs[0] = SEGS_OFF;
-            delay(durationPOT() >> 1);
             break;
         case 3:
             seqTone(3);
             segs[1] = SEGS_BC;
-            delay(durationPOT() >> 1);
-            seqToneStop();
-            segs[0] = SEGS_OFF;
-            delay(durationPOT() >> 1);
             break;
         default:
             break;
         }
+        delay(durationPOT() >> 1);
+        seqToneStop();
         segs[0] = SEGS_OFF;
         segs[1] = SEGS_OFF;
+        delay(durationPOT() >> 1);
     }
     return 1;
 }
