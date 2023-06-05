@@ -35,7 +35,7 @@ void toneIncrement()
         octave++;
         for (i = 0; i < 4; i++)
         {
-            tone[i] <<= 1;
+            tone[i] >>= 1;
             if (tone[i] > 55000){
                 tone[i] = 55000;
             }
@@ -50,7 +50,7 @@ void toneDecrement()
         octave--;
         for (i = 0; i < 4; i++)
         {
-            tone[i] >>= 1;
+            tone[i] <<= 1;
         }
     }
 }
