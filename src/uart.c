@@ -12,6 +12,7 @@ extern volatile gameState pb_state;
 extern volatile seqState state;
 extern volatile uint32_t student_number;
 extern volatile uint32_t new_number;
+extern volatile uint8_t uart_control;
 extern volatile char name[20];
 volatile Serial_State SERIAL_STATE = AWAITING_COMMAND;
 volatile uint8_t chars_received = 0;
@@ -82,6 +83,7 @@ ISR(USART0_RXC_vect)
             if (pb_state == Wait)
             {
                 pb_released = 1;
+                uart_control = 1;
                 pb_state = button1;
             }
             break;
@@ -90,6 +92,7 @@ ISR(USART0_RXC_vect)
             if (pb_state == Wait)
             {
                 pb_released = 1;
+                uart_control = 1;
                 pb_state = button2;
             }
             break;
@@ -98,6 +101,7 @@ ISR(USART0_RXC_vect)
             if (pb_state == Wait)
             {
                 pb_released = 1;
+                uart_control = 1;
                 pb_state = button3;
             }
             break;
@@ -106,6 +110,7 @@ ISR(USART0_RXC_vect)
             if (pb_state == Wait)
             {
                 pb_released = 1;
+                uart_control = 1;
                 pb_state = button4;
             }
             break;
@@ -148,8 +153,9 @@ ISR(USART0_RXC_vect)
         if (++chars_received == 8)
         {
             if(payload_valid){
-            new_number = payload;
+                new_number = payload;
             }
+            chars_received = 0;
             SERIAL_STATE = AWAITING_COMMAND;
         }
         break;

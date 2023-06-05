@@ -9,6 +9,7 @@
 int i;
 uint16_t duration;
 
+volatile uint8_t uart_control = 0;
 volatile uint32_t new_number;
 volatile uint32_t student_number = 0x11243635;
 extern volatile uint8_t pb_debounced;
@@ -62,6 +63,7 @@ int seqRun(uint16_t len)
         switch (pb_state)
         {
         case Pause:
+            uart_control = 0;
             pb_released = 0;
             break;
         case Wait:
@@ -85,7 +87,7 @@ int seqRun(uint16_t len)
         case button1:
             seqTone(0);
             segs[0] = SEGS_EF;
-            if (!pb_released)
+            if ((uart_control == 0) & (!pb_released))
             {
                 if (pb_rising & PIN4_bm)
                 {
@@ -105,7 +107,7 @@ int seqRun(uint16_t len)
         case button2:
             seqTone(1);
             segs[0] = SEGS_BC;
-            if (!pb_released)
+            if ((uart_control == 0) & (!pb_released))
             {
                 if (pb_rising & PIN5_bm)
                     pb_released = 1;
@@ -123,7 +125,7 @@ int seqRun(uint16_t len)
         case button3:
             seqTone(2);
             segs[1] = SEGS_EF;
-            if (!pb_released)
+            if ((uart_control == 0) & (!pb_released))
             {
                 if (pb_rising & PIN6_bm)
                     pb_released = 1;
@@ -141,7 +143,7 @@ int seqRun(uint16_t len)
         case button4:
             seqTone(3);
             segs[1] = SEGS_BC;
-            if (!pb_released)
+            if ((uart_control == 0) & (!pb_released))
             {
                 if (pb_rising & PIN7_bm)
                     pb_released = 1;
