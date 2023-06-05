@@ -4,4 +4,4 @@
 void timer_init();
 void pb_debounce(void);
 void delay();
-uint16_t durationPOT();
+uint16_t durationPOT(void);

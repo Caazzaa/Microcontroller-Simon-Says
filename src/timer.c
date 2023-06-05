@@ -49,7 +49,7 @@ void delay(uint16_t time){
     return;
 }
 
-uint16_t durationPOT(){
+uint16_t durationPOT(void){
     uint32_t result = ADC0.RESULT;
     uint16_t duration = (result * ADC8bit) + ((int16_t)(result * ADC8bit) >> 8) + 250;
     return duration;
