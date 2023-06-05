@@ -9,6 +9,8 @@ volatile uint16_t playback_time = 500;
 volatile uint16_t new_playback_time = 500;
 volatile uint8_t allow_updating_playback_delay = 0;
 
+#define ADC8bit 6.8359375
+
 void pb_debounce(void);
 
 void timer_init(void)
@@ -34,7 +36,7 @@ ISR(TCB1_INT_vect)
 
     if (allow_updating_playback_delay)
     {
-        playback_time = new_playback_time;
+        playback_time = durationPOT();
         allow_updating_playback_delay = 0;
     }
 
@@ -49,7 +51,7 @@ void delay(uint16_t time){
 
 uint16_t durationPOT(){
     uint32_t result = ADC0.RESULT;
-    uint16_t duration = result / 255*1750+250;
+    uint16_t duration = (result * ADC8bit) + ((int16_t)(result * ADC8bit) >> 8) + 250;
     return duration;
 }
 

@@ -1,6 +1,6 @@
 #include "headers.h"
 
-void adc_init(){
+void adc_init(void){
     ADC0.CTRLA |= ADC_ENABLE_bm;
     ADC0.CTRLB = ADC_PRESC_DIV2_gc;
     ADC0.CTRLC = (4 << ADC_TIMEBASE_gp) | ADC_REFSEL_VDD_gc;
