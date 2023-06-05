@@ -148,7 +148,6 @@ ISR(USART0_RXC_vect)
         if (++chars_received == 8)
         {
             new_number = payload;
-            chars_received = 0;
             SERIAL_STATE = AWAITING_COMMAND;
         }
         break;
