@@ -1,6 +1,3 @@
-#include <avr/io.h>
-#include <stdint.h>
-#include <stdio.h>
 #include "uart.h"
 #include "buzzer.h"
 #include "timer.h"

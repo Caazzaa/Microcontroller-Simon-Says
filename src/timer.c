@@ -1,6 +1,11 @@
 #include "headers.h"
-#include "timer.h"
+#include "sequence.h"
+#include "uart.h"
 #include "spi.h"
+#include "buttons.h"
+#include "buzzer.h"
+#include "potentiometer.h"
+#include "timer.h"
 
 extern uint8_t digit1, digit2;
 extern uint8_t segs[];
@@ -37,7 +42,7 @@ ISR(TCB1_INT_vect)
 
     if (allow_updating_playback_delay)
     {
-        playback_time = durationPOT();
+        playback_time = durationPOT(); //set playback time to duration from potentiometer
         allow_updating_playback_delay = 0;
     }
 
@@ -51,8 +56,8 @@ void delay(uint16_t time){
 }
 
 uint16_t durationPOT(void){
-    uint16_t result = ADC0.RESULT;
-    uint16_t duration = (result * ADC8bit) + ((int16_t)(result * ADC8bit) >> 8) + 250;
+    uint16_t result = ADC0.RESULT; //get result from potentiometer
+    uint16_t duration = (result * ADC8bit) + ((int16_t)(result * ADC8bit) >> 8) + 250; //get duration of delay depending on where the potentiometer is set
     return duration;
 }
 

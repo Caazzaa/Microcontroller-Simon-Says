@@ -1,4 +1,10 @@
 #include "headers.h"
+#include "sequence.h"
+#include "uart.h"
+#include "spi.h"
+#include "timer.h"
+#include "buttons.h"
+#include "buzzer.h"
 
 void adc_init(void){
     ADC0.CTRLA |= ADC_ENABLE_bm;

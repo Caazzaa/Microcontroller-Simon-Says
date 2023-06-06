@@ -2,13 +2,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <util/delay.h>
-#include "sequence.h"
-#include "uart.h"
-#include "spi.h"
-#include "timer.h"
-#include "buttons.h"
-#include "buzzer.h"
-#include "potentiometer.h"
+#include <avr/io.h>
 
 typedef enum
 {

@@ -1,4 +1,10 @@
 #include "headers.h"
+#include "sequence.h"
+#include "uart.h"
+#include "spi.h"
+#include "timer.h"
+#include "buzzer.h"
+#include "potentiometer.h"
 
 volatile uint8_t pb_debounced = 0xFF;
 // volatile pb_debounced = 0xFF;

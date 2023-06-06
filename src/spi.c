@@ -1,5 +1,10 @@
+#include "headers.h"
+#include "sequence.h"
 #include "uart.h"
 #include "timer.h"
+#include "buttons.h"
+#include "buzzer.h"
+#include "potentiometer.h"
 
 void spi_init(void){
     cli();
