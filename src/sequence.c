@@ -223,6 +223,7 @@ int seqRun(uint16_t len)
 
             pb_state = Wait;
             return 0;
+            break;
         default:
             pb_state = Wait;
             break;
