@@ -1,4 +1,4 @@
-# SimonSaysQUTy
+# Simon Says Game
 
 A Simon Says game developed as part of a university project using a custom-built QUTy board featuring an AVR microcontroller.
 
